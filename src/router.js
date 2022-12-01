@@ -4,23 +4,37 @@ import Header from './header';
 import { BrowserRouter} from 'react-router-dom';
 import {Route ,Routes} from 'react-router-dom';
 import Cart from './shoppingcart';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Imgdata from "./Imgdata"
 import Footer from "./footer"
 import About from "./about"
 import Contact from "./contact"
 import Msg from './cartmsg';
-// import {Route ,Routes} from 'react-router-dom';
+
+const getitem =()=>{
+  let list=localStorage.getItem('cartitem');
+  
+  if(list){
+     return JSON.parse(localStorage.getItem('cartitem'));
+  }else{
+     return[];
+  }
+}
+
 
 const R=()=>{
   const {productItem}=Imgdata;
-    const[cart,setCart]=useState([]);
+    const[cart,setCart]=useState(getitem());
     const[msg,setMsg]=useState(false)
+    
+
+    useEffect(()=>{
+      localStorage.setItem("cartitem",JSON.stringify(cart))
+     },[cart])
 
     const handle =(productItem)=>{
-      // console.log("click")
-      const productexit=cart.find((item)=>item.id===productItem.id)
-      // console.log()
+       const productexit=cart.find((item)=>item.id===productItem.id)
+      
       if(productexit){
         setCart(cart.map((item)=>item.id===productItem.id ?
         {...productexit, quantity:productexit.quantity+1}:item
@@ -34,13 +48,11 @@ const R=()=>{
         setMsg(true)
         setTimeout(() => {
           setMsg(false)}, 3000);
-      
-      }
+        }
       
     }
     
     const handleRemove =(product)=>{
-      // console.log("click")
       const productexit=cart.find((item)=>item.id===product.id)
        console.log(productexit.quantity)
       if(productexit.quantity===1){
@@ -52,7 +64,6 @@ const R=()=>{
         setCart(cart.map((item)=>item.id===product.id ?
         {...productexit, quantity:productexit.quantity-1}:item
         ))
-        // setCart([...cart,{...product,quantity:1}])
         }
       
     }
@@ -64,10 +75,14 @@ const R=()=>{
     }
     const clearcart=()=>{
         setCart([]);
+        localStorage.removeItem("cartitem");
+      
+       
       
     }
     const clearitem=(product)=>{
       setCart(cart.filter((item)=>item.id !==product.id ))
+      localStorage.clear("cartitem")
       }
     
     return(

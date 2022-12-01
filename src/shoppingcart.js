@@ -12,7 +12,7 @@ const Cart=({cart,removeitem,additem,clearitem,clearcart})=>{
         <div className="shoppingcart">
         {cart.length === 0 && (
             <div className="cartempty">
-            <h1>cart is empty</h1>
+            <h1>Cart Is Empty</h1>
             </div>
         )}
         {cart.map((item)=>(
